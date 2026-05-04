@@ -1,3 +1,4 @@
+import type { Camper } from "@prisma/client";
 import Link from "next/link";
 import SceneIllustration from "./components/SceneIllustration";
 import StatsRow from "./components/StatsRow";
@@ -24,7 +25,7 @@ const testimonials = [
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const campers = await prisma.camper.findMany({
+  const campers: Camper[] = await prisma.camper.findMany({
     take: 3,
     orderBy: { rating: "desc" },
   });

@@ -1,10 +1,11 @@
+import type { Camper } from "@prisma/client";
 import Link from "next/link";
 import prisma from "../lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function CatalogPage() {
-  const campers = await prisma.camper.findMany({
+  const campers: Camper[] = await prisma.camper.findMany({
     orderBy: { name: "asc" },
   });
 
