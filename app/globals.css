@@ -1,26 +1,125 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0b1218;
+  --surface: #0f1b25;
+  --surface-strong: #111f2a;
+  --accent: #2dd4bf;
+  --muted: #94a3b8;
+  --font-body: var(--font-manrope);
+  --font-display: var(--font-playfair);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: #e2e8f0;
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-manrope);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: #e2e8f0;
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display), serif;
+}
+
+.glass-panel {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.75),
+    rgba(15, 23, 42, 0.2)
+  );
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.45);
+}
+
+.glass-strong {
+  background: linear-gradient(
+    145deg,
+    rgba(15, 23, 42, 0.9),
+    rgba(15, 23, 42, 0.35)
+  );
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 30px 80px rgba(3, 7, 18, 0.6);
+}
+
+.hero-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(0px);
+  opacity: 0.7;
+  animation: float 12s ease-in-out infinite;
+}
+
+.glow-orb.delayed {
+  animation-delay: -4s;
+}
+
+.text-glow {
+  text-shadow: 0 20px 60px rgba(45, 212, 191, 0.2);
+}
+
+.card-lift {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 50px rgba(15, 23, 42, 0.45);
+}
+
+.fade-up {
+  animation: fadeUp 0.8s ease both;
+}
+
+.fade-up.delay-1 {
+  animation-delay: 0.1s;
+}
+
+.fade-up.delay-2 {
+  animation-delay: 0.2s;
+}
+
+.fade-up.delay-3 {
+  animation-delay: 0.3s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-18px);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
 }
