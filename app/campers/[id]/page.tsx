@@ -64,7 +64,7 @@ export default async function CamperDetailPage({ params }: CamperDetailProps) {
               Equipamiento incluido
             </h2>
             <div className="mt-4 grid gap-3 text-sm text-slate-300 md:grid-cols-2">
-              {camper.features.map((feature) => (
+              {camper.features.map((feature: string) => (
                 <div
                   key={feature}
                   className="rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3"
