@@ -25,6 +25,7 @@ export default async function CamperDetailPage({ params }: CamperDetailProps) {
       select: { id: true },
       orderBy: { id: "asc" },
     });
+    const idList = ids as Array<{ id: string }>;
 
     return (
       <div className="mx-auto w-full max-w-4xl px-6 pb-20 pt-14 text-sm text-slate-300">
@@ -32,7 +33,7 @@ export default async function CamperDetailPage({ params }: CamperDetailProps) {
           Camper no encontrada.
         </p>
         <p className="mt-2">
-          IDs disponibles: {ids.map((item) => item.id).join(", ")}
+          IDs disponibles: {idList.map((item) => item.id).join(", ")}
         </p>
       </div>
     );
