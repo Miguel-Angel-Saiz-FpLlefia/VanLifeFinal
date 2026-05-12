@@ -10,8 +10,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           ADMIN DASHBOARD
         </h2>
         <nav className="flex flex-col gap-4">
-          <Link href="/dashboard" className="text-teal-400 font-semibold hover:text-teal-300 transition-colors">
+          <Link href="/dashboard" className="text-slate-400 font-semibold hover:text-teal-300 transition-colors">
             Añadir Caravana
+          </Link>
+          <Link href="/dashboard/bookings" className="text-slate-400 font-semibold hover:text-teal-300 transition-colors">
+            Gestionar Reservas
           </Link>
           <Link href="/" className="text-slate-400 hover:text-white transition-colors mt-8">
             Volver a la Web

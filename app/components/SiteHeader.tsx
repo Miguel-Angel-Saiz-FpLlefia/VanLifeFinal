@@ -70,6 +70,11 @@ export default function SiteHeader({ initialUser }: { initialUser?: User | null 
               {item.label}
             </Link>
           ))}
+          {user && (
+            <Link href="/my-bookings" className="transition hover:text-teal-200">
+              Mis Reservas
+            </Link>
+          )}
           {user?.role === "ADMIN" && (
             <Link href="/dashboard" className="text-teal-400 font-semibold transition hover:text-teal-300">
               Dashboard

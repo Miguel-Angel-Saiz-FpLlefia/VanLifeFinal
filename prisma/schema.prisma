@@ -11,31 +11,53 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String?
+  role      Role      @default(USER)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+}
+
+model Camper {
+  id           String    @id
+  name         String
+  tagline      String
+  pricePerDay  Int
+  sleep        Int
+  seats        Int
+  transmission String
+  location     String
+  rating       Float
+  reviews      Int
+  features     String[]
+  images       String[]
+  accent       String
+  bookings     Booking[]
+}
+
+model Booking {
+  id         String        @id @default(cuid())
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Float
+  status     BookingStatus @default(PENDING)
+  user       User          @relation(fields: [userId], references: [id])
+  userId     String
+  camper     Camper        @relation(fields: [camperId], references: [id])
+  camperId   String
+  createdAt  DateTime      @default(now())
+}
+
 enum Role {
   USER
   ADMIN
 }
 
-model User {
-  id       String  @id @default(cuid())
-  email    String  @unique
-  name     String?
-  password String
-  role     Role    @default(USER)
-}
-
-model Camper {
-  id          String   @id
-  name        String
-  tagline     String
-  pricePerDay Int
-  sleep       Int
-  seats       Int
-  transmission String
-  location    String
-  rating      Float
-  reviews     Int
-  features    String[]
-  accent      String
-  images      String[]
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
 }

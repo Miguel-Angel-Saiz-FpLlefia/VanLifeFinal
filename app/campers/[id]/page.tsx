@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import prisma from "../../lib/prisma";
+import BookingForm from "@/app/components/BookingForm";
 
 type CamperDetailProps = {
   params: { id: string };
@@ -103,20 +104,8 @@ export default async function CamperDetailPage({ params }: CamperDetailProps) {
           </div>
         </div>
         <aside className="space-y-6">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">
-              Precio base
-            </p>
-            <p className="mt-3 text-3xl font-semibold text-white">
-              {camper.pricePerDay} EUR / dia
-            </p>
-            <p className="mt-2 text-sm text-slate-300">
-              Incluye seguro completo y asistencia 24/7.
-            </p>
-            <button className="mt-6 w-full rounded-full bg-teal-400 px-4 py-3 text-sm font-semibold text-slate-950">
-              Reservar esta camper
-            </button>
-          </div>
+          <BookingForm camperId={camper.id} pricePerDay={camper.pricePerDay} />
+          
           <div className="rounded-3xl border border-white/10 bg-slate-950/40 p-6 text-sm text-slate-300">
             <p className="text-xs uppercase tracking-[0.3em] text-slate-500">
               Valoracion
