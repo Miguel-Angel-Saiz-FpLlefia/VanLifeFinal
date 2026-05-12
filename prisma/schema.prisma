@@ -42,8 +42,8 @@ model Booking {
   userId     String
   camperId   String
   createdAt  DateTime      @default(now())
-  camper     Camper        @relation(fields: [camperId], references: [id])
-  user       User          @relation(fields: [userId], references: [id])
+  camper     Camper        @relation(fields: [camperId], references: [id], onDelete: Cascade)
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
