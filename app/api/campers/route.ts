@@ -9,7 +9,8 @@ export async function POST(req: Request) {
     // Verificar autenticación y rol
     const session = await verifySession();
     
-    if (!session || session.role !== 'ADMIN') {
+    const allowedRoles = ['ADMIN', 'EDITOR'];
+    if (!session || !allowedRoles.includes(session.role)) {
       return NextResponse.json(
         { error: "No autorizado" },
         { status: 403 }

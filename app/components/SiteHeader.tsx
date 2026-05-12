@@ -75,7 +75,7 @@ export default function SiteHeader({ initialUser }: { initialUser?: User | null 
               Mis Reservas
             </Link>
           )}
-          {user?.role === "ADMIN" && (
+          {(user?.role === "ADMIN" || user?.role === "EDITOR") && (
             <Link href="/dashboard" className="text-teal-400 font-semibold transition hover:text-teal-300">
               Dashboard
             </Link>

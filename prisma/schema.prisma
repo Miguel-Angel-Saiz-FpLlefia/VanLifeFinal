@@ -53,6 +53,7 @@ model Booking {
 
 enum Role {
   USER
+  EDITOR
   ADMIN
 }
 

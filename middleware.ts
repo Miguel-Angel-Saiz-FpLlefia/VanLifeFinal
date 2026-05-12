@@ -19,9 +19,10 @@ export default async function middleware(request: NextRequest) {
         algorithms: ["HS256"],
       });
 
-      // Verificar si tiene rol ADMIN
+      // Verificar si tiene rol ADMIN o EDITOR
       console.log('Middleware - Role:', payload.role);
-      if (payload.role !== 'ADMIN') {
+      const allowedRoles = ['ADMIN', 'EDITOR'];
+      if (!allowedRoles.includes(payload.role as string)) {
         console.log('Middleware - Access denied, redirecting to /');
         return NextResponse.redirect(new URL('/', request.url));
       }
