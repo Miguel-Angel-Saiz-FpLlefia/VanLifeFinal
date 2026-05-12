@@ -79,3 +79,18 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    const campers = await prisma.camper.findMany({
+      orderBy: { name: "asc" },
+    });
+    return NextResponse.json(campers);
+  } catch (error) {
+    console.error("Error al obtener caravanas:", error);
+    return NextResponse.json(
+      { error: "Error al obtener caravanas" },
+      { status: 500 }
+    );
+  }
+}

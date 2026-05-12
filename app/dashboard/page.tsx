@@ -1,140 +1,85 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
-export default function AddCamperPage() {
-  const [formData, setFormData] = useState({
-    id: "",
-    name: "",
-    tagline: "",
-    pricePerDay: "",
-    sleep: "",
-    seats: "",
-    transmission: "Manual",
-    location: "",
-    rating: "",
-    reviews: "",
-    accent: "#14b8a6",
-    features: "",
-    images: "",
-  });
-  
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+interface Camper {
+  id: string;
+  name: string;
+  location: string;
+  pricePerDay: number;
+}
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+export default function CampersListPage() {
+  const [campers, setCampers] = useState<Camper[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+  useEffect(() => {
+    fetch("/api/campers")
+      .then(res => res.json())
+      .then(data => {
+        setCampers(data);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("¿Estás seguro de que quieres eliminar esta caravana?")) return;
 
     try {
-      const res = await fetch("/api/campers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          pricePerDay: parseInt(formData.pricePerDay) || 0,
-          sleep: parseInt(formData.sleep) || 0,
-          seats: parseInt(formData.seats) || 0,
-          rating: parseFloat(formData.rating) || 0,
-          reviews: parseInt(formData.reviews) || 0,
-          features: (typeof formData.features === 'string' ? formData.features.split(",") : []).map(f => f.trim()).filter(Boolean),
-          images: (typeof formData.images === 'string' ? formData.images.split(",") : []).map(i => i.trim()).filter(Boolean),
-        }),
+      const res = await fetch(`/api/campers/${id}`, {
+        method: "DELETE",
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Error al añadir la caravana");
-
-      setMessage("¡Caravana añadida exitosamente!");
-      setFormData({
-        id: "", name: "", tagline: "", pricePerDay: "", sleep: "", seats: "", 
-        transmission: "Manual", location: "", rating: "", reviews: "", 
-        accent: "#14b8a6", features: "", images: ""
-      });
-    } catch (error: any) {
-      setMessage(`Error: ${error.message}`);
-    } finally {
-      setLoading(false);
+      if (res.ok) {
+        setCampers(campers.filter(c => c.id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.error || "Error al eliminar");
+      }
+    } catch (err) {
+      alert("Error de conexión");
     }
   };
 
-  return (
-    <div className="max-w-3xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-8">
-      <h1 className="text-2xl font-semibold text-white mb-6">Añadir Nueva Caravana</h1>
-      
-      {message && (
-        <div className={`p-4 rounded-lg mb-6 ${message.includes("Error") ? "bg-red-950/50 text-red-400" : "bg-teal-950/50 text-teal-400"}`}>
-          {message}
-        </div>
-      )}
+  if (loading) return <div className="text-white">Cargando caravanas...</div>;
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">ID (slug único)</label>
-            <input name="id" value={formData.id} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" placeholder="ej: vw-california" />
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Nombre</label>
-            <input name="name" value={formData.name} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" placeholder="Volkswagen California" />
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Eslogan (Tagline)</label>
-            <input name="tagline" value={formData.tagline} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" placeholder="La clásica y aventurera" />
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Precio por Día (€)</label>
-            <input name="pricePerDay" type="number" value={formData.pricePerDay} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" />
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Plazas (Dormir / Viajar)</label>
-            <div className="flex gap-4">
-              <input name="sleep" type="number" value={formData.sleep} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" placeholder="Dormir" />
-              <input name="seats" type="number" value={formData.seats} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" placeholder="Viajar" />
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-semibold text-white">Gestionar Caravanas</h1>
+        <Link href="/dashboard/campers/new" className="bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold py-2 px-4 rounded-xl text-sm transition-colors">
+          + Añadir Nueva
+        </Link>
+      </div>
+      
+      <div className="grid gap-4">
+        {campers.map((camper) => (
+          <div key={camper.id} className="flex items-center justify-between bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-colors">
+            <div>
+              <h3 className="text-lg font-semibold text-white">{camper.name}</h3>
+              <p className="text-sm text-slate-400">{camper.location} • {camper.pricePerDay}€ / día</p>
+            </div>
+            <div className="flex gap-3">
+              <Link 
+                href={`/dashboard/campers/${camper.id}/edit`}
+                className="text-sm font-semibold text-teal-400 hover:text-teal-300 px-3 py-1 rounded-lg hover:bg-teal-400/10 transition-all"
+              >
+                Editar
+              </Link>
+              <button 
+                onClick={() => handleDelete(camper.id)}
+                className="text-sm font-semibold text-red-400 hover:text-red-300 px-3 py-1 rounded-lg hover:bg-red-400/10 transition-all"
+              >
+                Eliminar
+              </button>
             </div>
           </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Transmisión</label>
-            <select name="transmission" value={formData.transmission} onChange={handleChange} className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white">
-              <option value="Manual">Manual</option>
-              <option value="Automática">Automática</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Ubicación</label>
-            <input name="location" value={formData.location} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" placeholder="Madrid, España" />
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Rating Inicial (0-5)</label>
-            <input name="rating" type="number" step="0.1" value={formData.rating} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" />
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Nº Reseñas</label>
-            <input name="reviews" type="number" value={formData.reviews} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" />
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Características (separadas por coma)</label>
-            <input name="features" value={formData.features} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" placeholder="Cocina, Ducha, Calefacción" />
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">URLs de Imágenes (separadas por coma)</label>
-            <input name="images" value={formData.images} onChange={handleChange} required className="w-full bg-slate-950/40 border border-white/10 rounded-xl px-4 py-2 text-white" placeholder="https://ejemplo.com/img1.jpg, https://ejemplo.com/img2.jpg" />
-          </div>
-          <div>
-            <label className="block text-xs uppercase tracking-wider text-slate-500 mb-2">Color de Acento (Hexadecimal)</label>
-            <input name="accent" type="color" value={formData.accent} onChange={handleChange} required className="w-full h-10 bg-slate-950/40 border border-white/10 rounded-xl px-2 text-white cursor-pointer" />
-          </div>
-        </div>
-
-        <button disabled={loading} type="submit" className="w-full bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold py-3 px-4 rounded-xl transition-colors disabled:opacity-50 mt-8">
-          {loading ? "Guardando..." : "Añadir Caravana"}
-        </button>
-      </form>
+        ))}
+        {campers.length === 0 && (
+          <div className="text-center py-12 text-slate-500 italic">No hay caravanas registradas.</div>
+        )}
+      </div>
     </div>
   );
 }

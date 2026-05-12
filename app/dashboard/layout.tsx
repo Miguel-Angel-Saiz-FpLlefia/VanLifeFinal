@@ -15,7 +15,10 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         </h2>
         <nav className="flex flex-col gap-4">
           <Link href="/dashboard" className="text-slate-400 font-semibold hover:text-teal-300 transition-colors">
-            Añadir Caravana
+            Gestionar Caravanas
+          </Link>
+          <Link href="/dashboard/campers/new" className="text-slate-400 font-semibold hover:text-teal-300 transition-colors">
+            Añadir Nueva
           </Link>
           <Link href="/dashboard/bookings" className="text-slate-400 font-semibold hover:text-teal-300 transition-colors">
             Gestionar Reservas
