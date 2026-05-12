@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import prisma from "../../lib/prisma";
 import BookingForm from "@/app/components/BookingForm";
+import CommentSection from "@/app/components/CommentSection";
 
 type CamperDetailProps = {
   params: Promise<{ id: string }>;
@@ -101,6 +102,9 @@ export default async function CamperDetailPage({ params }: CamperDetailProps) {
               ))}
             </div>
           </div>
+          
+          {/* Comentarios */}
+          <CommentSection camperId={camper.id} />
         </div>
         <aside className="space-y-6">
           <BookingForm camperId={camper.id} pricePerDay={camper.pricePerDay} />
