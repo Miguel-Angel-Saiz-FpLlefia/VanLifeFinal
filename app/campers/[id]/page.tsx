@@ -46,9 +46,36 @@ export default async function CamperDetailPage({ params }: CamperDetailProps) {
       </Link>
       <div className="mt-6 grid gap-8 md:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <div
-            className={`h-64 rounded-3xl bg-gradient-to-br ${camper.accent}`}
-          />
+          <div className="space-y-4">
+            {camper.images && camper.images.length > 0 ? (
+              <div className="grid gap-4">
+                <div className="relative h-80 w-full overflow-hidden rounded-3xl">
+                  <img
+                    src={camper.images[0]}
+                    alt={camper.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                {camper.images.length > 1 && (
+                  <div className="grid grid-cols-3 gap-4">
+                    {camper.images.slice(1).map((img, index) => (
+                      <div key={index} className="relative h-32 overflow-hidden rounded-2xl">
+                        <img
+                          src={img}
+                          alt={`${camper.name} ${index + 1}`}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div
+                className={`h-64 rounded-3xl bg-gradient-to-br ${camper.accent}`}
+              />
+            )}
+          </div>
           <div className="mt-6 space-y-4">
             <h1 className="text-4xl font-semibold text-white">{camper.name}</h1>
             <p className="text-sm leading-6 text-slate-300">{camper.tagline}</p>

@@ -36,9 +36,19 @@ export default async function CatalogPage() {
               href={`/campers/${camper.id}`}
               className="group rounded-3xl border border-white/10 bg-white/5 p-5 transition hover:border-teal-300/40"
             >
-              <div
-                className={`h-44 rounded-2xl bg-gradient-to-br ${camper.accent}`}
-              />
+              <div className="relative h-44 w-full overflow-hidden rounded-2xl">
+                {camper.images && camper.images.length > 0 ? (
+                  <img
+                    src={camper.images[0]}
+                    alt={camper.name}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                ) : (
+                  <div
+                    className={`h-full w-full bg-gradient-to-br ${camper.accent}`}
+                  />
+                )}
+              </div>
               <div className="mt-4 space-y-2">
                 <h2 className="text-lg font-semibold text-white">
                   {camper.name}

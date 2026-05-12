@@ -3,6 +3,8 @@ import { Manrope, Playfair_Display } from "next/font/google";
 import SiteFooter from "./components/SiteFooter";
 import SiteHeader from "./components/SiteHeader";
 import "./globals.css";
+import { verifySession } from "@/app/lib/session";
+import prisma from "@/app/lib/prisma";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -19,11 +21,28 @@ export const metadata: Metadata = {
   description: "Alquiler de campers premium para rutas inolvidables.",
 };
 
-export default function RootLayout({
+async function getInitialUser() {
+  const session = await verifySession();
+  if (!session) return null;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+      select: { email: true, role: true },
+    });
+    return user;
+  } catch (error) {
+    return null;
+  }
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getInitialUser();
+
   return (
     <html
       lang="en"
@@ -31,7 +50,7 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-[#0b1218] text-slate-100">
         <div className="flex min-h-screen flex-col">
-          <SiteHeader />
+          <SiteHeader initialUser={user} />
           <main className="flex-1">{children}</main>
           <SiteFooter />
         </div>
