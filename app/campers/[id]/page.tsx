@@ -4,14 +4,13 @@ import prisma from "../../lib/prisma";
 import BookingForm from "@/app/components/BookingForm";
 
 type CamperDetailProps = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export const dynamic = "force-dynamic";
 
 export default async function CamperDetailPage({ params }: CamperDetailProps) {
-  const resolvedParams = await params;
-  const rawId = resolvedParams?.id;
+  const { id: rawId } = await params;
   const id = rawId ? decodeURIComponent(rawId).trim() : "";
   if (!id) {
     notFound();

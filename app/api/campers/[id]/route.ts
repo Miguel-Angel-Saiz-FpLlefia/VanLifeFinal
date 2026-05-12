@@ -5,7 +5,7 @@ import prisma from "@/app/lib/prisma";
 export const dynamic = "force-dynamic";
 
 // Actualizar caravana (ADMIN o EDITOR)
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await verifySession();
     const allowedRoles = ["ADMIN", "EDITOR"];
@@ -14,7 +14,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
 
     const data = await req.json();
-    const { id } = params;
+    const { id } = await params;
 
     const camper = await prisma.camper.update({
       where: { id },
@@ -42,7 +42,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 }
 
 // Eliminar caravana (ADMIN o EDITOR)
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await verifySession();
     const allowedRoles = ["ADMIN", "EDITOR"];
@@ -50,7 +50,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       return NextResponse.json({ error: "No autorizado" }, { status: 403 });
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     await prisma.camper.delete({
       where: { id },
@@ -64,9 +64,9 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
 }
 
 // Obtener una caravana específica (para el formulario de edición)
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-      const { id } = params;
+      const { id } = await params;
       const camper = await prisma.camper.findUnique({
         where: { id },
       });
