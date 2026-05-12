@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const session = await verifySession();
-    if (!session || session.role !== "ADMIN") {
+    const allowedRoles = ["ADMIN", "EDITOR"];
+    if (!session || !allowedRoles.includes(session.role)) {
       return NextResponse.json({ error: "No autorizado" }, { status: 403 });
     }
 
@@ -31,7 +32,8 @@ export async function GET() {
 export async function PATCH(req: Request) {
   try {
     const session = await verifySession();
-    if (!session || session.role !== "ADMIN") {
+    const allowedRoles = ["ADMIN", "EDITOR"];
+    if (!session || !allowedRoles.includes(session.role)) {
       return NextResponse.json({ error: "No autorizado" }, { status: 403 });
     }
 
